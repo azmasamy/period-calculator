@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'period.dart';
+import 'period_card.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -7,11 +8,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Period> _periods = [
-    Period(date: DateTime.now()),
-    Period(date: DateTime.now()),
-    Period(date: DateTime.now())
-  ];
+  List<Period> _periods = [];
 
   DateTime _datePicked = DateTime.now();
 
@@ -59,39 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 .substring(0, _datePicked.toString().indexOf(' '))),
     );
 
-    Widget periodTemplate(Period period) {
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                        "Date: ${period.date.toString().substring(0, period.date.toString().indexOf(' '))}"),
-                    SizedBox(height: 8.0),
-                    Text(
-                      "Duration: ${period.duration}",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete),
-                color: Colors.red,
-              )
-            ],
-          ),
-        ),
-      );
-    }
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -113,7 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        
+                        setState(() {
+                          _periods.insert(0, Period(date: _datePicked));
+                          updatePeriodDuration();
+                        });
                       },
                       color: Colors.red,
                     ),
@@ -122,12 +89,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Column(
-              children:
-                  _periods.map((period) => periodTemplate(period)).toList(),
+              children: _periods
+                  .map((period) => PeriodCard(
+                        period: period,
+                      delete: () {
+                          setState(() {
+                            _periods.remove(period);
+                            updatePeriodDuration();
+                          });
+                      },))
+                  .toList(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void updatePeriodDuration() {
+    if(_periods.length > 1){
+      _periods[1].calculateDuration(_periods[0]);
+    }
+    _periods[0].duration = null;
   }
 }
