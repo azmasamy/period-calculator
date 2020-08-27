@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   age: ^0.0.1
+  sqflite: ^1.0.0
+  path_provider: ^0.4.1
 
 
   # The following adds the Cupertino Icons font to your application.

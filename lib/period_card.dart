@@ -27,7 +27,7 @@ class _PeriodCardState extends State<PeriodCard> {
                     children: <Widget>[
                       Text("Date: "),
                       Text(
-                        formatDate(widget.period.date),
+                        Period.dateToString(widget.period.date),
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -60,11 +60,7 @@ class _PeriodCardState extends State<PeriodCard> {
     );
   }
 
-  String formatDate(DateTime date) {
-    return date
-        .toString()
-        .substring(0, date.toString().indexOf(' '));
-  }
+
 
   String formatDuration(int duration) {
     return (duration == null ? "Waiting for next period" : "$duration");
